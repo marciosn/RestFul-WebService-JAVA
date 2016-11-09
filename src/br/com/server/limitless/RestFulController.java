@@ -5,6 +5,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
@@ -54,6 +55,15 @@ public class RestFulController {
 	public Response getCnpjCaptcha(){
 		ServiceCustomRequests requests = new ServiceCustomRequests();
 		Response response = requests.executePost("https://movel01.receita.fazenda.gov.br:443/servicos-rfb/v2/ConsultaCNPJ/captcha/post");
+		return response;
+	}
+	
+	@Path("/cnpj")
+	@GET
+	@Produces("application/json")
+	public Response getCnpj(){
+		ServiceCustomRequests requests = new ServiceCustomRequests();
+		Response response = requests.executePost("https://movel01.receita.fazenda.gov.br:443/servicos-rfb/v2/ConsultaCNPJ/", "");
 		return response;
 	}
 }

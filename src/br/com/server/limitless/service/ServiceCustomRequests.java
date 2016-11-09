@@ -169,6 +169,51 @@ public class ServiceCustomRequests {
 		}
 	}
 	
+	public Response executePost(String targetUrl, String urlParams) {
+		try {
+			HttpsURLConnection conn = null;
+			URL url = new URL(targetUrl);
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			ctx.init(new KeyManager[0], new TrustManager[] { new DefaultTrustManager() }, new SecureRandom());
+			SSLContext.setDefault(ctx);
+			
+			conn = (HttpsURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("User-Agent", USER_AGENT);
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty("token", "d4ab662f303c33f776c7e6fce4812d38b89ef7ca");
+			conn.setRequestProperty("cnpj", "92788009000127");
+			conn.setRequestProperty("resposta", "zm6pr");
+			conn.setDoOutput(true);
+			conn.setHostnameVerifier(new HostnameVerifier() {
+				@Override
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			});
+
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Response Code : " + conn.getResponseCode());
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			System.out.println(response.toString());
+			conn.disconnect();
+			return Response.status(200).entity(response.toString()).build();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity(e.getMessage()).build();
+		}
+	}
+	
 	 private static class DefaultTrustManager implements X509TrustManager {
 
 		@Override
